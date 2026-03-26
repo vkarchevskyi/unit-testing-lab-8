@@ -59,19 +59,19 @@ export class ScheduleValidator {
     return conflicts;
   }
 
-  calculateLoad(lessons: Lesson[], teacherName: string): number {
+  calculateLoad(lessons: Lesson[], teacher: Teacher): number {
     const teacherLessonsQuantity = lessons.filter(
-      (lesson) => lesson.teacher.name === teacherName,
+      (lesson) => lesson.teacher.id === teacher.id,
     ).length;
 
     if (teacherLessonsQuantity > 20) {
       throw new Error(
-        `Teacher ${teacherName} has an excessive load of ${teacherLessonsQuantity} lessons.`,
+        `Teacher ${teacher.name} has an excessive load of ${teacherLessonsQuantity} lessons.`,
       );
     }
 
     if (teacherLessonsQuantity <= 0) {
-      throw new Error(`Teacher ${teacherName} has no lessons assigned.`);
+      throw new Error(`Teacher ${teacher.name} has no lessons assigned.`);
     }
 
     return teacherLessonsQuantity;

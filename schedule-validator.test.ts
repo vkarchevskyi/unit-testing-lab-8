@@ -154,6 +154,7 @@ describe("Виявлення конфліктів", () => {
 describe("Розрахунок навантаження вчителя", () => {
   test("Повертає правильне навантаження для вчителя з уроком", () => {
     const validator = new ScheduleValidator();
+    const teacher = { id: 1, name: "Баранюк Олександр" };
     const lessons: Lesson[] = [
       {
         id: 1,
@@ -165,12 +166,13 @@ describe("Розрахунок навантаження вчителя", () => {
       },
     ];
 
-    const load = validator.calculateLoad(lessons, "Баранюк Олександр");
+    const load = validator.calculateLoad(lessons, teacher);
     expect(load).toBe(1);
   });
 
   test("Повертає правильне навантаження для вчителя з 20 уроками", () => {
     const validator = new ScheduleValidator();
+    const teacher = { id: 1, name: "Баранюк Олександр" };
     const lessons: Lesson[] = [];
     for (let i = 0; i < 20; i++) {
       lessons.push({
@@ -183,12 +185,13 @@ describe("Розрахунок навантаження вчителя", () => {
       });
     }
 
-    const load = validator.calculateLoad(lessons, "Баранюк Олександр");
+    const load = validator.calculateLoad(lessons, teacher);
     expect(load).toBe(20);
   });
 
   test("Викидає помилку для вчителя з надмірним навантаженням", () => {
     const validator = new ScheduleValidator();
+    const teacher = { id: 1, name: "Баранюк Олександр" };
     const lessons: Lesson[] = [];
     for (let i = 0; i < 21; i++) {
       lessons.push({
@@ -202,7 +205,7 @@ describe("Розрахунок навантаження вчителя", () => {
     }
 
     expect(() => {
-      validator.calculateLoad(lessons, "Баранюк Олександр");
+      validator.calculateLoad(lessons, teacher);
     }).toThrowError(
       "Teacher Баранюк Олександр has an excessive load of 21 lessons.",
     );
@@ -210,6 +213,7 @@ describe("Розрахунок навантаження вчителя", () => {
 
   test("Викидає помилку для вчителя без уроків", () => {
     const validator = new ScheduleValidator();
+    const teacher = { id: 2, name: "Сурков Костянтин" };
     const lessons: Lesson[] = [
       {
         id: 1,
@@ -222,7 +226,7 @@ describe("Розрахунок навантаження вчителя", () => {
     ];
 
     expect(() => {
-      validator.calculateLoad(lessons, "Сурков Костянтин");
-    }).toThrowError(`Teacher Сурков Костянтин has no lessons assigned.`);
+      validator.calculateLoad(lessons, teacher);
+    }).toThrowError(`Teacher ${teacher.name} has no lessons assigned.`);
   });
 });
